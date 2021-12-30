@@ -2,15 +2,16 @@ package com.epam.routes.reader;
 
 
 import com.epam.routes.main.Main;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class JsonReader {
-    private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(Main.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     public String read(String path) {
         String json = null;
@@ -18,7 +19,7 @@ public class JsonReader {
         try {
             json = new String(Files.readAllBytes(Paths.get(path)));
         } catch (IOException e) {
-            LOGGER.log(Level.ERROR, "Can't read Json file.", e);
+            LOGGER.info("Can't read Json file.", e);
         }
 
         return json;

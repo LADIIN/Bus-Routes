@@ -6,8 +6,9 @@ import com.epam.routes.entity.Route;
 import com.epam.routes.reader.JsonReader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-    private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(Main.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
         JsonReader jsonReader = new JsonReader();
@@ -38,7 +39,7 @@ public class Main {
             buses.forEach(executorService::submit);
             executorService.shutdown();
         } catch (IOException e) {
-            LOGGER.log(Level.ERROR, "IOException caught.", e);
+            LOGGER.error("IOException caught.", e);
         }
 
 

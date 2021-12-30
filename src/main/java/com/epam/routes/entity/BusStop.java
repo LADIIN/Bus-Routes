@@ -2,8 +2,9 @@ package com.epam.routes.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -11,7 +12,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BusStop {
-    private static final Logger LOGGER = Logger.getLogger(BusStop.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(BusStop.class);
     private static final int STOP_TIME = 1;
 
     private String name;
@@ -36,16 +37,16 @@ public class BusStop {
             busStopSemaphore.acquire();
             busStopLock.lock();
 
-            LOGGER.log(Level.INFO, String.format("%s arrived at %s", bus, this));
+            LOGGER.info(String.format("%s arrived at %s", bus, this));
 
             leavePassengers(bus);
             enterPassengers(bus);
 
             TimeUnit.SECONDS.sleep(STOP_TIME);
-            LOGGER.log(Level.INFO, String.format("%s left %s", bus, this));
+            LOGGER.info(String.format("%s left %s", bus, this));
 
         } catch (InterruptedException e) {
-            LOGGER.log(Level.ERROR, "Can't exchange passengers on bus stop cause:" + e);
+            LOGGER.info("Can't exchange passengers on bus stop cause:" + e);
         } finally {
             busStopSemaphore.release();
             busStopLock.unlock();
