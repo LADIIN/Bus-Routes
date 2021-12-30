@@ -1,0 +1,14 @@
+[
+  {
+    "name": "001",
+    "busesCapacity": 2
+  },
+  {
+    "name": "002",
+    "busesCapacity": 2
+  },
+  {
+    "name": "003",
+    "busesCapacity": 2
+  }
+]

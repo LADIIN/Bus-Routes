@@ -1,0 +1,14 @@
+[
+  {
+    "passengerSits": 25,
+    "passengers": 25
+  },
+  {
+    "passengerSits": 20,
+    "passengers": 15
+  },
+  {
+    "passengerSits": 30,
+    "passengers": 30
+  }
+]

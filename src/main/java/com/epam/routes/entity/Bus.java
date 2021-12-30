@@ -1,16 +1,21 @@
-package com.epam.routes;
+package com.epam.routes.entity;
+
+import com.epam.routes.util.IdGenerator;
 
 public class Bus implements Runnable {
-    private final Integer id;
-    private final Route route;
-    private final int passengerSits;
+    private final long id;
+    private Route route;
+    private int passengerSits;
     private int passengers;
 
-    public Bus(Integer id, Route route, int passengersCapacity) {
-        this.id = id;
+    public Bus() {
+        this.id = IdGenerator.generatorId();
+    }
+
+    public Bus(Route route, int passengersCapacity) {
+        this.id = IdGenerator.generatorId();
         this.route = route;
         this.passengerSits = passengersCapacity;
-        //TODO: rebuild
         this.passengers = passengersCapacity;
     }
 
@@ -21,7 +26,12 @@ public class Bus implements Runnable {
         }
     }
 
-    public Integer getId() {
+    @Override
+    public String toString() {
+        return String.format("Bus: {id = %d, passengerSits = %d, passengers = %d}", id, passengerSits, passengers);
+    }
+
+    public long getId() {
         return id;
     }
 
@@ -31,6 +41,18 @@ public class Bus implements Runnable {
 
     public int getPassengers() {
         return passengers;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
+    }
+
+    public void setPassengerSits(int passengerSits) {
+        this.passengerSits = passengerSits;
+    }
+
+    public void setPassengers(int passengers) {
+        this.passengers = passengers;
     }
 
     public int getFreeSits() {
