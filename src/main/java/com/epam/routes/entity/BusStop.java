@@ -2,7 +2,6 @@ package com.epam.routes.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,12 +25,6 @@ public class BusStop {
         this.busStopSemaphore = new Semaphore(busesCapacity, true);
     }
 
-    public BusStop(String name, int busesCapacity) {
-        this.name = name;
-        this.busesCapacity = busesCapacity;
-        this.busStopSemaphore = new Semaphore(busesCapacity, true);
-    }
-
     public void exchangePassengers(Bus bus) {
         try {
             busStopSemaphore.acquire();
@@ -44,7 +37,6 @@ public class BusStop {
 
             TimeUnit.SECONDS.sleep(STOP_TIME);
             LOGGER.info(String.format("%s left %s", bus, this));
-
         } catch (InterruptedException e) {
             LOGGER.info("Can't exchange passengers on bus stop cause:" + e);
         } finally {
@@ -55,6 +47,7 @@ public class BusStop {
 
     private void leavePassengers(Bus bus) {
         int passengerLeavingBus = (int) (Math.random() * bus.getPassengerSits());
+//        passengersOnStop.addAndGet(passengerLeavingBus);
         passengersOnStop += passengerLeavingBus;
         bus.removePassengers(passengerLeavingBus);
     }
@@ -64,23 +57,13 @@ public class BusStop {
         int freeSits = bus.getFreeSits();
 
         if (passengerEnteringBus > freeSits) {
+//            passengersOnStop.getAndAdd(passengerEnteringBus - freeSits);
             passengersOnStop += passengerEnteringBus - freeSits;
             passengerEnteringBus = freeSits;
         }
         bus.addPassengers(passengerEnteringBus);
+//        passengersOnStop.getAndAdd(-passengerEnteringBus);
         passengersOnStop -= passengerEnteringBus;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setBusesCapacity(int busesCapacity) {
-        this.busesCapacity = busesCapacity;
-    }
-
-    public void setPassengersOnStop(int passengersOnStop) {
-        this.passengersOnStop = passengersOnStop;
     }
 
     @Override
@@ -94,6 +77,10 @@ public class BusStop {
 
     public String getName() {
         return name;
+    }
+
+    public int getPassengersOnStop() {
+        return passengersOnStop;
     }
 
     public int getBusesCapacity() {

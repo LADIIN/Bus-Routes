@@ -3,16 +3,25 @@ package com.epam.routes.entity;
 import java.util.List;
 
 public class Route {
-    private  String name;
-    private  List<BusStop> busStops;
+    private String name;
+    private List<BusStop> busStops;
+    private static volatile Route instance;
 
-    public Route(){
+    private Route() {
 
     }
 
-    public Route(String name, List<BusStop> busStops) {
-        this.name = name;
-        this.busStops = busStops;
+    public static Route getInstance() {
+        Route localInstance = instance;
+        if (localInstance == null) {
+            synchronized (Route.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new Route();
+                }
+            }
+        }
+        return localInstance;
     }
 
     public String getName() {

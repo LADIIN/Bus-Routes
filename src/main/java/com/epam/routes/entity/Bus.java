@@ -4,7 +4,6 @@ import com.epam.routes.util.IdGenerator;
 
 public class Bus implements Runnable {
     private final long id;
-    private Route route;
     private int passengerSits;
     private int passengers;
 
@@ -12,15 +11,10 @@ public class Bus implements Runnable {
         this.id = IdGenerator.generatorId();
     }
 
-    public Bus(Route route, int passengersCapacity) {
-        this.id = IdGenerator.generatorId();
-        this.route = route;
-        this.passengerSits = passengersCapacity;
-        this.passengers = passengersCapacity;
-    }
-
     @Override
     public void run() {
+        Route route = Route.getInstance();
+
         for (BusStop busStop : route.getBusStops()) {
             busStop.exchangePassengers(this);
         }
@@ -35,16 +29,8 @@ public class Bus implements Runnable {
         return id;
     }
 
-    public Route getRoute() {
-        return route;
-    }
-
     public int getPassengers() {
         return passengers;
-    }
-
-    public void setRoute(Route route) {
-        this.route = route;
     }
 
     public void setPassengerSits(int passengerSits) {

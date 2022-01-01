@@ -1,15 +1,12 @@
 package com.epam.routes.main;
 
-import com.epam.routes.entity.Bus;
-import com.epam.routes.entity.BusStop;
-import com.epam.routes.entity.Route;
-import com.epam.routes.reader.JsonReader;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.epam.routes.entity.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,25 +16,25 @@ public class Main {
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
-        JsonReader jsonReader = new JsonReader();
-
-        String busesJson = jsonReader.read("src/main/java/resources/buses.json");
-        String routesJSon = jsonReader.read("src/main/java/resources/busStops.json");
+        String busesJsonPath = "src/main/java/resources/buses.json";
+        String busStopsJsonPath = "src/main/java/resources/busStops.json";
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            List<Bus> buses = objectMapper.readValue(busesJson, new TypeReference<List<Bus>>() {
-            });
+            BusWrapper busWrapper = objectMapper.readValue(new File(busesJsonPath), BusWrapper.class);
+            List<Bus> buses = busWrapper.getBuses();
 
-            List<BusStop> busStops = objectMapper.readValue(routesJSon, new TypeReference<List<BusStop>>() {
-            });
+            BusStopWrapper busStopWrapper = objectMapper.readValue(new File(busStopsJsonPath), BusStopWrapper.class);
+            List<BusStop> busStops = busStopWrapper.getBusStops();
 
-            Route route = new Route("Route", busStops);
+            Route route = Route.getInstance();
+            route.setName("Main Route");
+            route.setBusStops(busStops);
 
             ExecutorService executorService = Executors.newFixedThreadPool(buses.size());
-            buses.forEach(bus -> bus.setRoute(route));
             buses.forEach(executorService::submit);
             executorService.shutdown();
+
         } catch (IOException e) {
             LOGGER.error("IOException caught.", e);
         }
