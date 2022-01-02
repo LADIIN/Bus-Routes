@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BusStop {
     private static final Logger LOGGER = LogManager.getLogger(BusStop.class);
-    private static final int STOP_TIME = 1;
+    private static final int STOP_DURATION = 1;
 
     private String name;
     private int busesCapacity;
@@ -32,10 +32,10 @@ public class BusStop {
 
             LOGGER.info(String.format("%s arrived at %s", bus, this));
 
-            leavePassengers(bus);
-            enterPassengers(bus);
+            leavePassengersFrom(bus);
+            enterPassengersTo(bus);
 
-            TimeUnit.SECONDS.sleep(STOP_TIME);
+            TimeUnit.SECONDS.sleep(STOP_DURATION);
             LOGGER.info(String.format("%s left %s", bus, this));
         } catch (InterruptedException e) {
             LOGGER.info("Can't exchange passengers on bus stop cause:" + e);
@@ -45,24 +45,20 @@ public class BusStop {
         }
     }
 
-    private void leavePassengers(Bus bus) {
-        int passengerLeavingBus = (int) (Math.random() * bus.getPassengerSits());
-//        passengersOnStop.addAndGet(passengerLeavingBus);
+    private void leavePassengersFrom(Bus bus) {
+        int passengerLeavingBus = (int) (Math.random() * bus.getPassengers());
         passengersOnStop += passengerLeavingBus;
         bus.removePassengers(passengerLeavingBus);
     }
 
-    private void enterPassengers(Bus bus) {
+    private void enterPassengersTo(Bus bus) {
         int passengerEnteringBus = (int) Math.round(Math.random() * passengersOnStop);
         int freeSits = bus.getFreeSits();
 
         if (passengerEnteringBus > freeSits) {
-//            passengersOnStop.getAndAdd(passengerEnteringBus - freeSits);
-            passengersOnStop += passengerEnteringBus - freeSits;
             passengerEnteringBus = freeSits;
         }
         bus.addPassengers(passengerEnteringBus);
-//        passengersOnStop.getAndAdd(-passengerEnteringBus);
         passengersOnStop -= passengerEnteringBus;
     }
 

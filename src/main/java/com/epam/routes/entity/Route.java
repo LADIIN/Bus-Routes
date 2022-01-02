@@ -8,7 +8,6 @@ public class Route {
     private static volatile Route instance;
 
     private Route() {
-
     }
 
     public static Route getInstance() {
