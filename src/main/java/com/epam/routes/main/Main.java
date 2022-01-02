@@ -34,7 +34,6 @@ public class Main {
             ExecutorService executorService = Executors.newFixedThreadPool(buses.size());
             buses.forEach(executorService::submit);
             executorService.shutdown();
-
         } catch (IOException e) {
             LOGGER.error("IOException caught.", e);
         }

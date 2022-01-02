@@ -33,14 +33,6 @@ public class Bus implements Runnable {
         return passengers;
     }
 
-    public void setPassengerSits(int passengerSits) {
-        this.passengerSits = passengerSits;
-    }
-
-    public void setPassengers(int passengers) {
-        this.passengers = passengers;
-    }
-
     public int getFreeSits() {
         return passengerSits - passengers;
     }
