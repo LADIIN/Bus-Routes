@@ -38,6 +38,5 @@ public class Main {
             LOGGER.error("IOException caught.", e);
         }
 
-
     }
 }

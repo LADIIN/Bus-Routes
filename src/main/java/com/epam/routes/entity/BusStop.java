@@ -29,7 +29,6 @@ public class BusStop {
         try {
             busStopSemaphore.acquire();
             busStopLock.lock();
-
             LOGGER.info(String.format("%s arrived at %s", bus, this));
 
             leavePassengersFrom(bus);

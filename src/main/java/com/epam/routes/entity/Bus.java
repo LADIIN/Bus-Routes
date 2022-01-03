@@ -2,13 +2,10 @@ package com.epam.routes.entity;
 
 import com.epam.routes.util.IdGenerator;
 
-import java.util.concurrent.CountDownLatch;
-
 public class Bus implements Runnable {
     private final long id;
     private int passengerSits;
     private int passengers;
-    private CountDownLatch latch;
 
     public Bus() {
         this.id = IdGenerator.generatorId();
@@ -17,11 +14,9 @@ public class Bus implements Runnable {
     @Override
     public void run() {
         Route route = Route.getInstance();
-
         for (BusStop busStop : route.getBusStops()) {
             busStop.exchangePassengers(this);
         }
-        latch.countDown();
     }
 
     @Override
@@ -35,10 +30,6 @@ public class Bus implements Runnable {
 
     public int getPassengers() {
         return passengers;
-    }
-
-    public void setLatch(CountDownLatch latch) {
-        this.latch = latch;
     }
 
     public int getFreeSits() {
