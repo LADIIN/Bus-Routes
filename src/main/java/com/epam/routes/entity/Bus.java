@@ -1,19 +1,17 @@
 package com.epam.routes.entity;
 
-import com.epam.routes.util.IdGenerator;
-
 public class Bus implements Runnable {
-    private final long id;
+    private long id;
     private int passengerSits;
     private int passengers;
 
     public Bus() {
-        this.id = IdGenerator.generatorId();
     }
 
     @Override
     public void run() {
         Route route = Route.getInstance();
+
         for (BusStop busStop : route.getBusStops()) {
             busStop.exchangePassengers(this);
         }
@@ -31,6 +29,7 @@ public class Bus implements Runnable {
     public int getPassengers() {
         return passengers;
     }
+
 
     public int getFreeSits() {
         return passengerSits - passengers;

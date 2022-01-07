@@ -1,28 +1,25 @@
 package com.epam.routes.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.epam.routes.util.IdGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BusStop {
     private static final Logger LOGGER = LogManager.getLogger(BusStop.class);
-    private static final int STOP_DURATION = 1;
+    private static final int BUSES_CAPACITY = 2;
 
-    private String name;
-    private int busesCapacity;
+    private final long id;
     private int passengersOnStop;
     private final Semaphore busStopSemaphore;
     private final Lock busStopLock = new ReentrantLock();
 
-    @JsonCreator
-    public BusStop(@JsonProperty("busesCapacity") int busesCapacity) {
-        this.busStopSemaphore = new Semaphore(busesCapacity, true);
+    public BusStop() {
+        id = IdGenerator.generatorId();
+        this.busStopSemaphore = new Semaphore(BUSES_CAPACITY, true);
     }
 
     public void exchangePassengers(Bus bus) {
@@ -34,10 +31,9 @@ public class BusStop {
             leavePassengersFrom(bus);
             enterPassengersTo(bus);
 
-            TimeUnit.SECONDS.sleep(STOP_DURATION);
             LOGGER.info(String.format("%s left %s", bus, this));
         } catch (InterruptedException e) {
-            LOGGER.info("Can't exchange passengers on bus stop cause:" + e);
+            throw new RuntimeException("Can't exchange passengers cause:", e);
         } finally {
             busStopSemaphore.release();
             busStopLock.unlock();
@@ -63,22 +59,14 @@ public class BusStop {
 
     @Override
     public String toString() {
-        return String.format("Bus stop: {name = '%s', passengers on stop: %d}", name, passengersOnStop);
+        return String.format("Bus stop: {id = %d, passengers on stop: %d}", id, passengersOnStop);
     }
 
     public Semaphore getBusStopSemaphore() {
         return busStopSemaphore;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public int getPassengersOnStop() {
         return passengersOnStop;
-    }
-
-    public int getBusesCapacity() {
-        return busesCapacity;
     }
 }

@@ -1,14 +1,17 @@
 {
   "buses": [
     {
+      "id": 1,
       "passengerSits": 25,
       "passengers": 25
     },
     {
+      "id": 2,
       "passengerSits": 20,
       "passengers": 15
     },
     {
+      "id": 3,
       "passengerSits": 30,
       "passengers": 30
     }

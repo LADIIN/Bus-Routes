@@ -1,11 +1,17 @@
 package com.epam.routes.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.IntStream;
 
 public class Route {
-    private String name;
-    private List<BusStop> busStops;
-    private static volatile Route instance;
+    private static final int BUS_STOPS_AMOUNT = 4;
+
+    private static Route instance;
+    private static final Lock lock = new ReentrantLock();
+    private final List<BusStop> busStops = new ArrayList<>();
 
     private Route() {
     }
@@ -13,26 +19,22 @@ public class Route {
     public static Route getInstance() {
         Route localInstance = instance;
         if (localInstance == null) {
-            synchronized (Route.class) {
+            lock.lock();
+            try {
                 localInstance = instance;
                 if (localInstance == null) {
                     instance = localInstance = new Route();
+                    instance.initializeBusStops();
                 }
+            } finally {
+                lock.unlock();
             }
         }
         return localInstance;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setBusStops(List<BusStop> busStops) {
-        this.busStops = busStops;
+    private void initializeBusStops() {
+        IntStream.range(0, BUS_STOPS_AMOUNT).mapToObj(busStop -> new BusStop()).forEach(busStops::add);
     }
 
     public List<BusStop> getBusStops() {

@@ -16,27 +16,22 @@ public class Main {
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
+        run();
+    }
+
+    private static void run() {
         String busesJsonPath = "src/main/java/resources/buses.json";
-        String busStopsJsonPath = "src/main/java/resources/busStops.json";
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             BusWrapper busWrapper = objectMapper.readValue(new File(busesJsonPath), BusWrapper.class);
             List<Bus> buses = busWrapper.getBuses();
 
-            BusStopWrapper busStopWrapper = objectMapper.readValue(new File(busStopsJsonPath), BusStopWrapper.class);
-            List<BusStop> busStops = busStopWrapper.getBusStops();
-
-            Route route = Route.getInstance();
-            route.setName("Main Route");
-            route.setBusStops(busStops);
-
             ExecutorService executorService = Executors.newFixedThreadPool(buses.size());
-            buses.forEach(executorService::submit);
+            buses.forEach(bus -> executorService.submit(new Thread(bus)));
             executorService.shutdown();
         } catch (IOException e) {
             LOGGER.error("IOException caught.", e);
         }
-
     }
 }
