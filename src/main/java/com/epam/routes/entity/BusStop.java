@@ -33,6 +33,7 @@ public class BusStop {
 
             LOGGER.info(String.format("%s left %s", bus, this));
         } catch (InterruptedException e) {
+            System.out.println("error");
             throw new RuntimeException("Can't exchange passengers cause:", e);
         } finally {
             busStopSemaphore.release();

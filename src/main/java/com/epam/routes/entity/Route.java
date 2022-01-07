@@ -17,20 +17,16 @@ public class Route {
     }
 
     public static Route getInstance() {
-        Route localInstance = instance;
-        if (localInstance == null) {
-            lock.lock();
-            try {
-                localInstance = instance;
-                if (localInstance == null) {
-                    instance = localInstance = new Route();
-                    instance.initializeBusStops();
-                }
-            } finally {
-                lock.unlock();
+        lock.lock();
+        try {
+            if (instance == null) {
+                instance = new Route();
+                instance.initializeBusStops();
             }
+        } finally {
+            lock.unlock();
         }
-        return localInstance;
+        return instance;
     }
 
     private void initializeBusStops() {

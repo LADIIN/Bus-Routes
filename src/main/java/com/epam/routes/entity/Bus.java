@@ -11,7 +11,6 @@ public class Bus implements Runnable {
     @Override
     public void run() {
         Route route = Route.getInstance();
-
         for (BusStop busStop : route.getBusStops()) {
             busStop.exchangePassengers(this);
         }
