@@ -14,12 +14,11 @@ public class BusStop {
 
     private final long id;
     private int passengersOnStop;
-    private final Semaphore busStopSemaphore;
+    private final Semaphore busStopSemaphore = new Semaphore(BUSES_CAPACITY, true);
     private final Lock busStopLock = new ReentrantLock();
 
     public BusStop() {
         id = IdGenerator.generatorId();
-        this.busStopSemaphore = new Semaphore(BUSES_CAPACITY, true);
     }
 
     public void exchangePassengers(Bus bus) {
