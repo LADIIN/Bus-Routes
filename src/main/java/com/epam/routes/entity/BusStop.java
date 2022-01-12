@@ -61,12 +61,4 @@ public class BusStop {
     public String toString() {
         return String.format("Bus stop: {id = %d, passengers on stop: %d}", id, passengersOnStop);
     }
-
-    public Semaphore getBusStopSemaphore() {
-        return busStopSemaphore;
-    }
-
-    public int getPassengersOnStop() {
-        return passengersOnStop;
-    }
 }
